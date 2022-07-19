@@ -111,6 +111,46 @@ func (this *Client) GetTradeNotification(req *http.Request) (noti *TradeNotifica
 	return noti, err
 }
 
+func (this *Client) GetSignNotification(req *http.Request) (noti *SignNotification, err error) {
+	if req == nil {
+		return nil, errors.New("request 参数不能为空")
+	}
+	if err = req.ParseForm(); err != nil {
+		return nil, err
+	}
+
+	noti = &SignNotification{
+		AuthAppId:  req.FormValue("auth_app_id"),
+		NotifyTime: req.FormValue("notify_time"),
+		NotifyType: req.FormValue("notify_type"),
+		NotifyId:   req.FormValue("notify_id"),
+		AppId:      req.FormValue("app_id"),
+
+		ValidTime:           req.FormValue("valid_time"),
+		AlipayLogonID:       req.FormValue("alipay_logon_id"),
+		InvalidTime:         req.FormValue("invalid_time"),
+		PrincipalType:       req.FormValue("principal_type"),
+		DeviceID:            req.FormValue("device_id"),
+		PrincipalID:         req.FormValue("principal_id"),
+		SignScene:           req.FormValue("sign_scene"),
+		AgreementNo:         req.FormValue("agreement_no"),
+		ThirdPartyType:      req.FormValue("third_party_type"),
+		Status:              req.FormValue("status"),
+		SignTime:            req.FormValue("sign_time"),
+		PersonalProductCode: req.FormValue("personal_product_code"),
+		ExternalAgreementNo: req.FormValue("external_agreement_no"),
+		ZmOpenID:            req.FormValue("zm_open_id"),
+		ExternalLogonID:     req.FormValue("external_logon_id"),
+		CreditAuthMode:      req.FormValue("credit_auth_mode"),
+	}
+
+	ok, err := this.VerifySign(req.Form)
+	if !ok {
+		return nil, err
+	}
+	return noti, err
+}
+
 func (this *Client) AckNotification(w http.ResponseWriter) {
 	AckNotification(w)
 }
